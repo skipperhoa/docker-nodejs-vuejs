@@ -1,10 +1,9 @@
-# HOÀ NGUYỂN CODER
-👉 Youtube : https://www.youtube.com/@hoanguyencoder7136
-👉 Tiktok: https://www.tiktok.com/@hoanguyencoder
-👉 Twitter: https://x.com/skipperhoa
-👉 Fanpage: https://www.facebook.com/profile.php?id=100049475056780
-🌐 Website: https://hoanguyenit.com
-
+# HÒA NGUYỄN CODER
+- 👉 Youtube : https://www.youtube.com/@hoanguyencoder7136
+- 👉 Tiktok: https://www.tiktok.com/@hoanguyencoder
+- 👉 Twitter: https://x.com/skipperhoa
+- 👉 Fanpage: https://www.facebook.com/profile.php?id=100049475056780
+- 🌐 Website: https://hoanguyenit.com
 
 #### NodeJS + VueJS + Docker Compose
 
