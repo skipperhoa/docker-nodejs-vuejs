@@ -1,0 +1,30 @@
+# Tạo image docker
+docker build -t vuejs-cookbook/dockerize-vuejs-app .
+
+# Run image
+docker run -it -p 8080:8080 --rm --name dockerize-vuejs-app-1 vuejs-cookbook/dockerize-vuejs-app
+
+docker-vue-cli % docker-compose -f docker-compose-v2.yml up  --build
+
+# Deploy Node.js + Vue.js using Docker
+Sử dụng docker để deploy Node.js + Vue.js , thật là tuyệt vời nếu bạn thử triển khai nó
+Mình rất thích "Docker" nó rất tuyệt
+
+
+# làm sạch input trước khi nhập : https://www.npmjs.com/package/sanitize-html
+npm i sanitize-html
+
+nếu dùng typescript
+npm install -D @types/sanitize-html
+
+# cài đặt thư viện editor v3 : https://imzbf.github.io/md-editor-v3/en-US/index
+https://github.com/imzbf/md-editor-v3
+
+# cài đặt format date
+npm i date-fns
+
+# cài đặt select option
+npm i vue-multiselect
+
+
+

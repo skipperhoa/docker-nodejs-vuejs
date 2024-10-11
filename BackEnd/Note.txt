@@ -1,0 +1,2 @@
+https://www.bezkoder.com/node-express-sequelize-postgresql/
+npm install express sequelize pg pg-hstore cors --save
