@@ -36,6 +36,11 @@
               <th
                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
               >
+               Brand
+              </th>
+              <th
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+              >
                 Create at
               </th>
               <th
@@ -78,6 +83,11 @@
               </td>
               <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
                
+               <span class="relative">{{ product.brand }}</span>
+            
+           </td>
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
+               
                   <span class="relative">{{ formattedDate(product.meta.createdAt) }}</span>
              
               </td>
@@ -91,10 +101,10 @@
     </div>
 
     <!-- hiện thị phân trang -->
-    <nav v-if="totalPages>0">
+        <nav v-if="paginations.length>0 && products.length>0">
           <ul class="pagination flex flex-wrap gap-2">
             <li
-              v-for="page in totalPages"
+              v-for="page in paginations"
               :key="page"
               class="page-item bg-gray-500 text-white w-8 h-8 flex items-center justify-center rounded-md"
               :class="{ 'bg-green-700 text-white': currentPage === page }"
@@ -109,13 +119,11 @@
           </ul>
         </nav>
   </div>
-
  </div>
 </template>
-
 <script>
 import { RouterLink } from 'vue-router'
-import { computed } from 'vue'
+import { computed,ref } from 'vue'
 import { format } from 'date-fns';
 import { useProductStore } from '../../../stores/product'
 export default {
@@ -128,6 +136,8 @@ export default {
     const products = computed(() => productStore.all) 
     const totalPages = computed(() => productStore.total)
     const currentPage = computed(() => productStore.currentPage)
+    const paginations = computed(() => productStore.paginationOnEachPage)
+    
     const formattedDate = (date) => {
       return format(new Date(date), 'yyyy-MM-dd HH:mm:ss');
     };
@@ -135,14 +145,15 @@ export default {
     const changePage = (page) => {
       productStore.pagination(page)
       productStore.currentPage = page
+      paginate(totalPages.value, currentPage.value, onEachPage.value)
     }
-  
     return {
       products,
       totalPages,
       currentPage,
       changePage,
-      formattedDate
+      formattedDate,
+      paginations
     }
   }
 }

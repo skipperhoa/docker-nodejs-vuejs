@@ -10,7 +10,7 @@
               <p>Category : {{ product.category }}</p>
              
               <p>Rating : {{ product.rating }}</p>
-              <div> 
+              <div v-if="markdownContent!=null" class="content"> 
                 <md-preview :modelValue="markdownContent" codeStyleReverse = "false"/>
               </div>
              <!--  <p>Reviews:</p>
@@ -49,10 +49,11 @@ import productRoute from "@/router/productRoute";
         setup() {
             const route = useRoute()
             const product = ref({})
-            const  markdownContent = ref('# hoa' )
+            const  markdownContent = ref(null)
             const getProduct = ()=>{
                 axios.get('https://dummyjson.com/products/'+route.params.id).then((response) => {
                     product.value = response.data
+                    markdownContent.value = response.data.description
                     
                     
                 })
@@ -70,4 +71,9 @@ import productRoute from "@/router/productRoute";
 
 /* them md-editor-v3 */
 /* @import 'md-editor-v3/lib/style.css'; */
+
+/* style */
+.content p{
+    color:red
+}
 </style>

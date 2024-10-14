@@ -53,7 +53,7 @@
 
 <script  lang="ts">
     import axios from "axios";
-    import {ref,reactive} from "vue";
+    import {ref,reactive,isProxy, toRaw } from "vue";
     import { useRoute,RouterLink } from 'vue-router'
     import Multiselect from 'vue-multiselect';
     import {MdEditor}  from 'md-editor-v3';
@@ -70,7 +70,7 @@
         },
         setup() {
             const route = useRoute()
-            const product = ref<Product>({ title: '', price: 0 });
+            const product = ref<any>({ title: '', price: 0 });
             const selectCategory = ref(null);
             const categoryOption = ref([``]);
             const bodyText = ref('# Hello Editor')
@@ -111,7 +111,7 @@
             const markdownContent = ref('');
 
             // Hàm xử lý khi tải ảnh lên
-           const handleImageUpload = (files: any[], callback: (data: { url: string; alt: string}[]) => void) => {
+           const handleImageUpload = (files: any[], callback: (urls: string[]) => void) => {
               // ...
               
                 const uploadPromises = files.map((file) => {
@@ -123,7 +123,8 @@
                 Promise.all(uploadPromises).then((urls) => {
                     // Gọi callback với danh sách URL của ảnh đã tải lên
                    // callback(urls.map((url) => ({ url, alt: 'image', title: 'image title' })));
-                    callback(urls.map((url) => ({ url, alt: 'image'})));
+                    //callback(urls.map((url) => ({ url: [url], alt: 'image'})));
+                    callback(urls); // Return an array of strings
                 });
             };
 
@@ -156,7 +157,7 @@
                 })
                 .then((response) => {
                     console.log('File uploaded successfully:', response);
-                    resolve(response.data.url); // Giả sử response.data.files chứa các URL
+                    resolve(response.data.url[0]); // Giả sử response.data.files chứa các URL
                 })
                 .catch((error) => {
                     console.error('Error uploading file:', error);
@@ -169,15 +170,32 @@
 
             /* submit form edit */
             const submitFormEdit = ()=>{
-                console.log(product.value)
-               /*  axios.put('https://dummyjson.com/products/'+route.params.id,product.value,{
+                //console.log("local data products",product.value)
+                const _product = product.value
+
+                // Khai bằng Proxy(Object) 
+                let rawData = _product;
+
+                if (isProxy(_product)){
+                    //get data in proxy object
+                    rawData = toRaw(_product)
+                }
+                // trả về object{}
+                console.log("local data products",rawData.title)
+
+                 axios.put('https://dummyjson.com/products/'+route.params.id,
+                {
+                    title:rawData.title,
+                    description:bodyText.value
+                }
+                 ,{
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 }).then((response) => {
-                    console.log(response.data)
+                    console.log("response from server",response.data)
                     
-                }) */
+                }) 
             }
             /* end submit form edit */
 
