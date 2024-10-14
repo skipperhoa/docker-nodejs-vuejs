@@ -4,6 +4,7 @@ export const useProductStore = defineStore('product', {
    state:()=>{
      return {
        products: [],
+       totalProducts: 0,
        perPage: 5,
        currentPage: 1,
        totalPages: 0,
@@ -17,12 +18,14 @@ export const useProductStore = defineStore('product', {
      },
      total(state){
        return state.totalPages
-     }
+     },
+    
    },
    actions:{
      async getProducts(){
         await axios.get('https://dummyjson.com/products').then((response) => {
           //console.log("products",response.data.products)
+          this.totalProducts = response.data.products.length
           this.totalPages = response.data.products.length / this.perPage
           this.pagination(1)
           this.paginate(this.totalPages, 1, this.onEachPage)

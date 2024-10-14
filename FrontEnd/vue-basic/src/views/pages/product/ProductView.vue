@@ -1,8 +1,15 @@
 <template>
   <div class="container mx-auto px-4 sm:px-8">
   <div class="py-8">
-    <div>
+    <div class="flex flex-row justify-between items-center">
       <h2 class="text-2xl font-semibold leading-tight text-white">Products</h2>
+      <div class="flex flex-row gap-2">
+          <div class="flex flex-row items-center gap-2">
+             <label for="" class="text-sm font-bold text-white">Search</label>
+             <input type="text" class="w-full p-1 bg-gray-200 rounded-md  outline-none">
+          </div>
+         
+      </div>
     </div>
 
     <!-- hiện thị dữ liệu -->
@@ -101,23 +108,27 @@
     </div>
 
     <!-- hiện thị phân trang -->
-        <nav v-if="paginations.length>0 && products.length>0">
-          <ul class="pagination flex flex-wrap gap-2">
-            <li
-              v-for="page in paginations"
-              :key="page"
-              class="page-item bg-gray-500 text-white w-8 h-8 flex items-center justify-center rounded-md"
-              :class="{ 'bg-green-700 text-white': currentPage === page }"
-            >
-              <button
-                class="page-link"
-                @click="changePage(page)"
-              >
-                {{ page }}
-              </button>
-            </li>
-          </ul>
-        </nav>
+     <div class="flex flex-row items-center justify-between">
+
+       <nav v-if="paginations.length>0 && products.length>0">
+         <ul class="pagination flex flex-wrap gap-2">
+           <li
+             v-for="page in paginations"
+             :key="page"
+             class="page-item bg-gray-500 text-white w-8 h-8 flex items-center justify-center rounded-md"
+             :class="{ 'bg-green-700 text-white': currentPage === page }"
+           >
+             <button
+               class="page-link"
+               @click="changePage(page)"
+             >
+               {{ page }}
+             </button>
+           </li>
+         </ul>
+       </nav>
+       <span class="text-white bg-green-700 p-1 rounded">Total :  {{ totalProducts }}</span>
+     </div>
   </div>
  </div>
 </template>
@@ -133,6 +144,7 @@ export default {
     // Dispatch fetch products
     productStore.getProducts()
     // Reactive computed properties
+    const totalProducts = computed(() => productStore.totalProducts)
     const products = computed(() => productStore.all) 
     const totalPages = computed(() => productStore.total)
     const currentPage = computed(() => productStore.currentPage)
@@ -145,7 +157,6 @@ export default {
     const changePage = (page) => {
       productStore.pagination(page)
       productStore.currentPage = page
-      paginate(totalPages.value, currentPage.value, onEachPage.value)
     }
     return {
       products,
@@ -153,7 +164,8 @@ export default {
       currentPage,
       changePage,
       formattedDate,
-      paginations
+      paginations,
+      totalProducts
     }
   }
 }

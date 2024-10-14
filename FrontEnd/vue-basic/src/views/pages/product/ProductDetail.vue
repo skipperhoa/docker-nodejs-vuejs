@@ -11,7 +11,7 @@
              
               <p>Rating : {{ product.rating }}</p>
               <div v-if="markdownContent!=null" class="content"> 
-                <md-preview :modelValue="markdownContent" codeStyleReverse = "false"/>
+                <md-preview :modelValue="markdownContent" codeStyleReverse />
               </div>
              <!--  <p>Reviews:</p>
               <ul>
@@ -38,8 +38,15 @@
     import {ref} from "vue";
     import { useRoute,RouterLink } from 'vue-router'
     import {MdEditor,MdPreview} from 'md-editor-v3';
-   
-import productRoute from "@/router/productRoute";
+    interface Product{
+        id:number,
+        title:string,
+        thumbnail:string,
+        description:string,
+        price:number,
+        category:string,
+        rating:number
+    }
     export default {
         components: {
            
@@ -48,7 +55,7 @@ import productRoute from "@/router/productRoute";
         },
         setup() {
             const route = useRoute()
-            const product = ref({})
+            const product = ref({} as Product);
             const  markdownContent = ref(null)
             const getProduct = ()=>{
                 axios.get('https://dummyjson.com/products/'+route.params.id).then((response) => {
