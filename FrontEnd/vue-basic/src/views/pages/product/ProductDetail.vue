@@ -1,6 +1,6 @@
 <template>
     <div class="w-full max-w-3xl m-auto">
-       <div class="w-full bg-gray-300 p-5 mt-5 flex flex-col rounded-md">
+       <div class="w-full bg-gray-500 p-5 mt-5 flex flex-col rounded-md">
           <div class="w-full">
              <img v-bind:src="product.thumbnail" alt="" class="m-auto block"/>
           </div>
@@ -60,9 +60,7 @@
             const getProduct = ()=>{
                 axios.get('https://dummyjson.com/products/'+route.params.id).then((response) => {
                     product.value = response.data
-                    markdownContent.value = response.data.description
-                    
-                    
+                    markdownContent.value = response.data.description 
                 })
             }
             getProduct()

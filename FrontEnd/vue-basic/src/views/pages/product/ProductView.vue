@@ -6,7 +6,31 @@
       <div class="flex flex-row gap-2">
           <div class="flex flex-row items-center gap-2">
              <label for="" class="text-sm font-bold text-white">Search</label>
-             <input type="text" class="w-full p-1 bg-gray-200 rounded-md  outline-none">
+            <div class="relative">
+              <input type="text" v-model="search" @change="submitSearch" class="w-full py-1 px-2 bg-gray-800 rounded-md text-sm text-white outline-none placeholder:text-white">
+              <span v-if="search" v-on:click="removeSearch" class="absolute top-1/2 -translate-y-1/2 right-2 text-white cursor-pointer">X</span>
+            </div>
+            <div class="flex flex-row items-center gap-2">
+               <label for="" class="text-sm font-bold text-white">Filter</label>
+               <div>
+                <VueMultiselect 
+                    v-model="category" 
+                    :options="productCategory"
+                    placeholder = "All"
+                    :multiple="false"
+                    :show-labels="false" 
+                     :clear-on-select="true"
+                    @select="selectFilterProductCategory"
+                    >
+                    <template slot="beforeList">
+    <div>
+      <button>none</button>
+      <button>all</button>
+    </div>
+  </template>
+                  </VueMultiselect>
+               </div>
+            </div>
           </div>
          
       </div>
@@ -17,41 +41,41 @@
       <div
         class="inline-block min-w-full shadow-md rounded-lg overflow-hidden"
       >
-        <table class="min-w-full leading-normal bg-gray-500">
+        <table class="min-w-full leading-normal bg-gray-700 text-gray-400">
           <thead>
             <tr>
               <th
-                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-500 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
                 Image
               </th>
               <th
-                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-500 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
                 Price
               </th>
               <th
-                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-500 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
               rating
               </th>
               <th
-                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-500 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
                 Category
               </th>
               <th
-                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-500 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
                Brand
               </th>
               <th
-                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-500 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
                 Create at
               </th>
               <th
-                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                class="px-5 py-3 border-b-2 border-gray-200 bg-gray-500 text-left text-xs font-semibold text-gray-300 uppercase tracking-wider"
               >
                 Modify
               </th>
@@ -59,7 +83,7 @@
           </thead>
           <tbody v-if="products.length>0">
             <tr v-for="product in products" key="product.id">
-              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-500 text-sm">
                 <div class="flex">
                   <div class="flex-shrink-0 w-16 h-16">
                     <img
@@ -69,36 +93,36 @@
                     />
                   </div>
                   <div class="ml-3">
-                    <p class="text-gray-900 whitespace-no-wrap">
+                    <p class="text-white whitespace-no-wrap">
                       {{ product.title }}
                     </p>
-                    <p class="text-gray-600 whitespace-no-wrap">SKU : {{ product.sku }}</p>
+                    <p class="text-white whitespace-no-wrap">SKU : {{ product.sku }}</p>
                   </div>
                 </div>
               </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
-                <p class="text-gray-900 whitespace-no-wrap">${{ product.price }}</p>
-                <p class="text-gray-600 whitespace-no-wrap">USD</p>
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-500 text-sm">
+                <p class="text-white whitespace-no-wrap">${{ product.price }}</p>
+                <p class="text-white whitespace-no-wrap">USD</p>
               </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
-                <p class="text-gray-900 whitespace-no-wrap">{{ product.rating }}</p>
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-500 text-sm">
+                <p class="text-white whitespace-no-wrap">{{ product.rating }}</p>
               </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-500 text-sm">
                
-                  <span class="relative">{{ product.category }}</span>
+                  <span class="relative text-red-200">{{ product.category }}</span>
                
               </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-500 text-sm">
                
-               <span class="relative">{{ product.brand }}</span>
+               <span class="relative text-white">{{ product.brand }}</span>
             
            </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm">
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-500 text-sm">
                
-                  <span class="relative">{{ formattedDate(product.meta.createdAt) }}</span>
+                  <span class="relative text-white">{{ formattedDate(product.meta.createdAt) }}</span>
              
               </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-gray-200 text-sm text-center">
+              <td class="px-5 py-5 border-b border-gray-200 bg-gray-500 text-sm text-center">
                 <RouterLink :to="{ name: 'ProductDetail', params: { id: product.id } }" class="bg-green-500 text-white p-2 rounded-md">Xem</RouterLink>
               </td>
             </tr>  
@@ -137,9 +161,18 @@ import { RouterLink } from 'vue-router'
 import { computed,ref } from 'vue'
 import { format } from 'date-fns';
 import { useProductStore } from '../../../stores/product'
+import axios from 'axios';
+import Multiselect from 'vue-multiselect';
 export default {
   //name: 'ProductView',
+  components: {
+            VueMultiselect: Multiselect,
+           
+  },
   setup() {
+    const search = ref('')
+    const category = ref("")
+    const productCategory = ref(["beauty","fragrances"])
     const productStore = useProductStore()
     // Dispatch fetch products
     productStore.getProducts()
@@ -155,9 +188,50 @@ export default {
     };
     // Hàm thay đổi trang
     const changePage = (page) => {
-      productStore.pagination(page)
       productStore.currentPage = page
+      if(search.value != ''){
+        productStore.searchPagination(search.value)
+      }else{
+        productStore.pagination(page)
+      }
+      
     }
+    //search
+    const submitSearch = () => {
+      if(search.value != ''){
+        productStore.currentPage = 1
+        productStore.searchPagination(search.value)
+      
+      }
+      
+    }
+    //remove search pagination
+    const removeSearch = () => {
+      productStore.currentPage = 1
+      search.value = ''
+      productStore.getProducts()
+    }
+
+    // get product category
+    const getProductCategory = ()=>{
+      axios.get('https://dummyjson.com/products/category-list').then((response) => {
+        productCategory.value = response.data
+      })
+    }
+    const selectFilterProductCategory=(option, id)=>{
+      let _value = option
+      productStore.currentPage = 1
+      let url ='https://dummyjson.com/products/category/'+_value+
+      '?limit='+productStore.perPage+'&skip='+((productStore.currentPage-1)*productStore.perPage)
+      axios.get(url).then((response) => {
+        console.log("Filter product category",response.data)
+        productStore.products = response.data.products
+        productStore.totalPages = Math.ceil(response.data.total / productStore.perPage)
+        productStore.paginate(productStore.totalPages, 1, productStore.onEachPage)
+      })
+      
+    }
+   getProductCategory();
     return {
       products,
       totalPages,
@@ -165,11 +239,42 @@ export default {
       changePage,
       formattedDate,
       paginations,
-      totalProducts
+      totalProducts,
+      search,
+      submitSearch,
+      removeSearch,
+      category,
+      productCategory,
+      selectFilterProductCategory
     }
   }
 }
 </script>
+<style>
+/* Thêm CSS của vue-multiselect */
+@import "vue-multiselect/dist/vue-multiselect.min.css";
+/* custom select filter */
+.multiselect{
+  width: 150px !important;
+  height: 30px !important;
+  min-height: 30px !important;
+}
+.multiselect__tags{
+  height: 30px !important;
+  min-height: 30px !important;
+  padding:2px 40px 0 4px;
+}
+.multiselect__select{
+  height: 30px !important;
+  min-height: 30px !important;
+}
+.multiselect__option{
+  font-size: 12px !important;
+}
+.multiselect__single{
+  font-size: 14px;
+}
+</style>
 
 
 

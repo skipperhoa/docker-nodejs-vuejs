@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import _ from 'lodash'; // Import lodash
 export const useProductStore = defineStore('product', {
    state:()=>{
      return {
@@ -19,7 +20,7 @@ export const useProductStore = defineStore('product', {
      total(state){
        return state.totalPages
      },
-    
+     
    },
    actions:{
      async getProducts(){
@@ -65,6 +66,15 @@ export const useProductStore = defineStore('product', {
           pagination.push(totalPages);
       } 
       this.paginationOnEachPage = pagination
+    },
+    searchPagination(text : string){
+      axios.get('https://dummyjson.com/products/search?q='+text+'&limit='+this.perPage+'&skip='+((this.currentPage-1)*this.perPage)
+        +'&select=id,title,thumbnail,price,rating,category,description,meta,reviews,id,sku,brand').then((response) => {
+          console.log("search pagination",response.data)
+        this.products = response.data.products;
+        this.totalPages = Math.ceil(response.data.total / this.perPage)
+        this.paginate(this.totalPages, 1, this.onEachPage) 
+      })
     }
    }
 })
