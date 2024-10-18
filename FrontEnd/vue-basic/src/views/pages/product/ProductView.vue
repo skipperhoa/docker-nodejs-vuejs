@@ -15,8 +15,10 @@
                <div>
                 <VueMultiselect 
                     v-model="category" 
+                   
                     :options="productCategory"
                     placeholder = "All"
+                    :allow-empty="true"
                     :multiple="false"
                     :show-labels="false" 
                      :clear-on-select="true"
@@ -172,7 +174,8 @@ export default {
   setup() {
     const search = ref('')
     const category = ref("")
-    const productCategory = ref(["beauty","fragrances"])
+    const productCategory = ref(["All"])
+    
     const productStore = useProductStore()
     // Dispatch fetch products
     productStore.getProducts()
@@ -215,22 +218,28 @@ export default {
     // get product category
     const getProductCategory = ()=>{
       axios.get('https://dummyjson.com/products/category-list').then((response) => {
-        productCategory.value = response.data
+        productCategory.value.push(...response.data)
       })
     }
     const selectFilterProductCategory=(option, id)=>{
-      let _value = option
-      productStore.currentPage = 1
-      let url ='https://dummyjson.com/products/category/'+_value+
-      '?limit='+productStore.perPage+'&skip='+((productStore.currentPage-1)*productStore.perPage)
-      axios.get(url).then((response) => {
-        console.log("Filter product category",response.data)
-        productStore.products = response.data.products
-        productStore.totalPages = Math.ceil(response.data.total / productStore.perPage)
-        productStore.paginate(productStore.totalPages, 1, productStore.onEachPage)
-      })
+      if(option == "All"){
+        removeSearch()
+      }
+      else{
+        let _value = option
+        productStore.currentPage = 1
+        let url ='https://dummyjson.com/products/category/'+_value+
+        '?limit='+productStore.perPage+'&skip='+((productStore.currentPage-1)*productStore.perPage)
+        axios.get(url).then((response) => {
+          console.log("Filter product category",response.data)
+          productStore.products = response.data.products
+          productStore.totalPages = Math.ceil(response.data.total / productStore.perPage)
+          productStore.paginate(productStore.totalPages, 1, productStore.onEachPage)
+        })
+      }
       
     }
+   
    getProductCategory();
     return {
       products,
@@ -274,6 +283,7 @@ export default {
 .multiselect__single{
   font-size: 14px;
 }
+
 </style>
 
 
