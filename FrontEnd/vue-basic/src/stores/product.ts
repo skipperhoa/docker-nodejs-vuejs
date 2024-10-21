@@ -72,9 +72,22 @@ export const useProductStore = defineStore('product', {
         +'&select=id,title,thumbnail,price,rating,category,description,meta,reviews,id,sku,brand').then((response) => {
           console.log("search pagination",response.data)
         this.products = response.data.products;
+        this.totalProducts = response.data.total;
         this.totalPages = Math.ceil(response.data.total / this.perPage)
         this.paginate(this.totalPages, 1, this.onEachPage) 
       })
+    },
+    filterPagination(option : string){
+      let url ='https://dummyjson.com/products/category/'+option+
+        '?limit='+this.perPage+'&skip='+((this.currentPage-1)*this.perPage)
+        console.log(url)
+          axios.get(url).then((response) => {
+          console.log(option,response.data)
+          this.products = response.data.products;
+          this.totalProducts = response.data.total;
+          this.totalPages = Math.ceil(response.data.total / this.perPage)
+          this.paginate(this.totalPages, 1, this.onEachPage) 
+        })
     }
    }
 })

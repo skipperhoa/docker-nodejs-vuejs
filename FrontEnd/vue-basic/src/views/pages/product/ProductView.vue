@@ -7,15 +7,14 @@
           <div class="flex flex-row items-center gap-2">
              <label for="" class="text-sm font-bold text-white">Search</label>
             <div class="relative">
-              <input type="text" v-model="search" @change="submitSearch" class="w-full py-1 px-2 bg-gray-800 rounded-md text-sm text-white outline-none placeholder:text-white">
-              <span v-if="search" v-on:click="removeSearch" class="absolute top-1/2 -translate-y-1/2 right-2 text-white cursor-pointer">X</span>
+              <input type="text" v-model="search" @change="submitSearch" class="w-full py-1 px-2 bg-gray-200 rounded-md text-sm text-black outline-none placeholder:text-white">
+              <span v-if="search" v-on:click="removeSearch" class="absolute top-1/2 -translate-y-1/2 right-2 text-black cursor-pointer">X</span>
             </div>
             <div class="flex flex-row items-center gap-2">
                <label for="" class="text-sm font-bold text-white">Filter</label>
                <div>
                 <VueMultiselect 
                     v-model="category" 
-                   
                     :options="productCategory"
                     placeholder = "All"
                     :allow-empty="true"
@@ -24,12 +23,7 @@
                      :clear-on-select="true"
                     @select="selectFilterProductCategory"
                     >
-                    <template slot="beforeList">
-    <div>
-      <button>none</button>
-      <button>all</button>
-    </div>
-  </template>
+                    
                   </VueMultiselect>
                </div>
             </div>
@@ -165,7 +159,14 @@ import { format } from 'date-fns';
 import { useProductStore } from '../../../stores/product'
 import axios from 'axios';
 import Multiselect from 'vue-multiselect';
+import { se } from 'date-fns/locale';
 export default {
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
+  },
   //name: 'ProductView',
   components: {
             VueMultiselect: Multiselect,
@@ -192,15 +193,26 @@ export default {
     // Hàm thay đổi trang
     const changePage = (page) => {
       productStore.currentPage = page
+      
       if(search.value != ''){
+
         productStore.searchPagination(search.value)
+
+      }else if(category.value != ''){
+
+        productStore.filterPagination(category.value)
+
       }else{
+
         productStore.pagination(page)
+
       }
       
     }
     //search
     const submitSearch = () => {
+      //remove option filter
+      category.value = ""
       if(search.value != ''){
         productStore.currentPage = 1
         productStore.searchPagination(search.value)
@@ -214,33 +226,27 @@ export default {
       search.value = ''
       productStore.getProducts()
     }
-
     // get product category
     const getProductCategory = ()=>{
       axios.get('https://dummyjson.com/products/category-list').then((response) => {
         productCategory.value.push(...response.data)
       })
     }
-    const selectFilterProductCategory=(option, id)=>{
+    const selectFilterProductCategory= async (option, id)=>{
+      productStore.currentPage = 1
+      search.value = ''
       if(option == "All"){
         removeSearch()
       }
       else{
         let _value = option
-        productStore.currentPage = 1
-        let url ='https://dummyjson.com/products/category/'+_value+
-        '?limit='+productStore.perPage+'&skip='+((productStore.currentPage-1)*productStore.perPage)
-        axios.get(url).then((response) => {
-          console.log("Filter product category",response.data)
-          productStore.products = response.data.products
-          productStore.totalPages = Math.ceil(response.data.total / productStore.perPage)
-          productStore.paginate(productStore.totalPages, 1, productStore.onEachPage)
-        })
+        productStore.filterPagination(_value)
       }
       
     }
-   
+   // Call product category
    getProductCategory();
+
     return {
       products,
       totalPages,

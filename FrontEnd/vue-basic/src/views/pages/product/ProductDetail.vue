@@ -48,6 +48,7 @@
         rating:number
     }
     export default {
+        name: 'ProductDetail',
         components: {
            
             MdEditor:MdEditor,

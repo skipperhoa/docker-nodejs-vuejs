@@ -1,0 +1,19 @@
+<template>
+    <div class="container mx-auto px-4 sm:px-8">
+        <h1>This is an login page</h1>
+    </div>
+</template>
+
+<script>
+export default {
+  props: {
+    id: {
+      type: String,
+      required: true
+    }
+  },
+  mounted() {
+    console.log('Product ID:', this.id); // Kiểm tra xem ID có được truyền hay không
+  }
+};
+</script>
